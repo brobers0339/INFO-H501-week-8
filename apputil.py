@@ -1,4 +1,5 @@
 from collections import defaultdict
+import random
 
 
 class MarkovText(object):
@@ -39,7 +40,62 @@ class MarkovText(object):
 
 
     def generate(self, seed_term=None, term_count=15):
+        """
+        Generate a random sentence based on the term dictionary.
 
-        # your code here ...
+        This function uses the term dictionary defined above to iteratively
+        build a sequence of words, starting from an optionally given seed term. 
+        Each next word is randomly chosen from the list of words that follow the 
+        current word in the term dictionary. If a seed term is not provided, a random
+        starting term is selected from the dictionary.
 
-        return None
+        Parameters
+        ----------
+        seed_term : str, optional
+            The initial word to start the generated sentence. 
+            If not provided, a random key from the term dictionary is used. 
+            Raises a ValueError if the provided seed term is not found in the dictionary.
+        term_count : int, optional
+            The number of terms to include in the generated sentence.
+            Defaults to 15.
+
+        Returns
+        -------
+        str
+            A randomly generated sentence composed of words derived from
+            the term dictionary starting with the given or randomized
+            seed term.
+
+        Raises
+        ------
+        ValueError
+            If a non-None seed term is provided that does not currently exist in the
+            term dictionary produced.
+        """
+
+        sentence = ""
+        word_count = 0
+        next_word = ''
+        
+        if seed_term not in self.term_dict:
+            if seed_term == None:
+                keys_list = list(self.term_dict.keys())
+                random_word = random.choice(keys_list)
+                seed_term = random_word
+            else:
+                raise ValueError("This term is not in the term dictionary!")
+
+        while word_count < term_count:
+            if word_count == 0:
+                curr_word = seed_term
+            else:
+                curr_word = next_word
+            sentence += " " + curr_word
+
+            if len(self.term_dict[curr_word]) < 1:
+                next_word = random.choice(keys_list)
+            else:
+                next_word = random.choice(self.term_dict[curr_word])
+            word_count += 1
+
+        return sentence
