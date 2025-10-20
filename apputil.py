@@ -76,7 +76,7 @@ class MarkovText(object):
         sentence = ""
         word_count = 0
         next_word = ''
-        
+
         if seed_term not in self.term_dict:
             if seed_term == None:
                 keys_list = list(self.term_dict.keys())
@@ -90,7 +90,7 @@ class MarkovText(object):
                 curr_word = seed_term
             else:
                 curr_word = next_word
-            sentence += " " + curr_word
+            sentence += curr_word + " "
 
             if len(self.term_dict[curr_word]) < 1:
                 next_word = random.choice(keys_list)
