@@ -24,16 +24,16 @@ class MarkovText(object):
             subsequent words (list of str).
         '''
 
-        self.corpus = self.corpus.split()
+        corpus_split = self.corpus.split()
 
         self.term_dict = defaultdict(list)
 
         index = 1
 
 
-        for word in self.corpus:
-            if index < len(self.corpus) - 1:
-                self.term_dict[word].append(self.corpus[index])
+        for word in corpus_split:
+            if index < len(corpus_split) - 1:
+                self.term_dict[word].append(corpus_split[index])
                 index += 1
             else:
                 return self.term_dict
@@ -76,14 +76,20 @@ class MarkovText(object):
         sentence = ""
         word_count = 0
         next_word = ''
+        keys_list = list(self.term_dict.keys())
 
-        if seed_term not in self.term_dict:
-            if seed_term == None:
-                keys_list = list(self.term_dict.keys())
-                random_word = random.choice(keys_list)
-                seed_term = random_word
-            else:
-                raise ValueError("This term is not in the term dictionary!")
+        if seed_term == None:
+            random_word = random.choice(keys_list)
+            seed_term = random_word
+
+        elif seed_term not in self.corpus:
+            raise ValueError("This term is not in the term dictionary!")
+        
+        elif seed_term not in self.term_dict:
+            sentence += seed_term + "."
+            word_count += 1
+            curr_word = seed_term
+            seed_term = random.choice(keys_list)
 
         while word_count < term_count:
             if word_count == 0:
